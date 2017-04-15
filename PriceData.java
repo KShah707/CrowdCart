@@ -29,5 +29,9 @@ public class PriceData {
 				
 		}
 	}
+	
+	public HashMap<String, ArrayList<Pair<String, Integer>>> getDatabase(){
+		return database;
+	}
 
 }

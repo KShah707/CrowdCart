@@ -38,9 +38,16 @@ public class BestFromList {
 	}
 	
 	
-	public ArrayList<Triplet<String, ArrayList<String>, Integer>> bestRoute(){
-		ArrayList<Triplet<String, ArrayList<String>, Integer>> best = new ArrayList<Triplet<String, ArrayList<String>, Integer>>(null);
+	public HashMap<String, ArrayList<String>> bestRoute(){
+		
 		ArrayList<String> nearbystores = this.nearbyStores();
+		
+		HashMap<String, ArrayList<String>> best = new HashMap<String, ArrayList<String>>(null);
+		for (String location : nearbystores) {
+			best.put(location, new ArrayList<String>(null));
+		}
+		
+		
 		int n = this.shoppinglist.size();
 		int m = nearbystores.size();
 		
@@ -48,16 +55,47 @@ public class BestFromList {
 		
 		// Initialize Dynamic Programming Table
 		for (int j = 0; j < m; j++) {
-			totalWeight[0][j] = this.getScore(this.knownprices.get(shoppinglist).get(j));
+			totalWeight[0][j] = this.getScore(this.knownprices.get(this.shoppinglist.get(0)).get(j));
 		}
-	
-		for (int i = 0; i < n; i++) {
+		
+		// Recurrence
+		for (int i = 1; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				
+				totalWeight[i][j] = this.getScore(this.knownprices.get(this.shoppinglist.get(i)).get(j)) + this.getDPMin(totalWeight, i-1, m);
 			}
 		}
 		
+		// Trace Back
+		for (int i = n-1; i >= 0; i--) {
+			String food = shoppinglist.get(i);
+			int j = getTracebackMin(totalWeight, i, m);
+			best.get(nearbystores.get(j)).add(food);
+		}
 		return best;
+	}
+	
+	public int getTracebackMin(int[][] table, int i, int m){
+		int minVal = Integer.MAX_VALUE;
+		int minJ = -1;
+		
+		for (int j = 0; j < m; j++) {
+			if (table[i][j] < minVal) {
+				minVal = table[i][j];
+				minJ = j;
+			}
+		}
+		return minJ;
+	}
+	
+	public int getDPMin(int[][] table, int i, int m){
+		int minVal = Integer.MAX_VALUE;
+		
+		for (int j = 0; j < m; j++) {
+			if (table[i][j] < minVal) {
+				minVal = table[i][j];
+			}
+		}
+		return minVal;
 	}
 	
 	public int getScore(Pair<String, Integer> entry){
@@ -70,9 +108,6 @@ public class BestFromList {
 	
 	public ArrayList<String> nearbyStores(){
 		return new ArrayList<String>(null);
-	}
-	
-	public static void main(String[] args){
 	}
 }
 

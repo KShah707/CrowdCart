@@ -1,28 +1,25 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.samples.vision.ocrreader.ui.camera.KnowledgeEngine;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RootActivity extends AppCompatActivity {
 
     private Button receiptBtn;
+    private CustomAdapter customAdapter;
+    private ArrayList<String> wordList;
+    private KnowledgeEngine knowledgeEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +47,13 @@ public class RootActivity extends AppCompatActivity {
             }
         });
 
+        wordList = new ArrayList<String>();
+
         ListView itemList = (ListView) findViewById(R.id.item_list);
-        //custom liust Adapter
+        customAdapter = new CustomAdapter(this, wordList);
+        itemList.setAdapter(customAdapter);
+
+        knowledgeEngine = new KnowledgeEngine(getApplicationContext());
     }
 
     @Override
@@ -60,10 +62,16 @@ public class RootActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == 0) {
             if (data.hasExtra("result")) {
-                ArrayList<String> wordList = (ArrayList<String>) data.getStringArrayListExtra("result");
+                ArrayList<String> rawItemList = data.getStringArrayListExtra("result");
+
+                for (String item : rawItemList)
+                {
+                    wordList.add(knowledgeEngine.closest(item));
+                }
+                customAdapter.notifyDataSetChanged();
 
                 if (wordList.size() > 0)
-                    Log.w("intent result", wordList.get(0));
+                    Log.w("intent result", wordList.get(wordList.size() - 1));
                 else
                     Log.w("intent result", "No items tapped");
             }

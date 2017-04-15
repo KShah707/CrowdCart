@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
+            android:background="#b51c1c"
             android:src="@drawable/common_ic_googleplayservices" />
 
         <View
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|top"
             android:layout_margin="16dp"
+            android:background="#a51bb5"
             android:src="@drawable/common_plus_signin_btn_icon_light"
             app:layout_anchor="@id/dummy"
             app:layout_anchorGravity="top|right|end" />

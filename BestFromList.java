@@ -8,12 +8,12 @@ import org.javatuples.*;
 
 public class BestFromList {
 
-	public HashMap<String, HashMap<String, Integer>> data;
+	public HashMap<String, HashMap<String, Double>> data;
 	public ArrayList<String> shoppinglist;
 	int tradeoff;
 	int samestore;
 	
-	public BestFromList(HashMap<String, HashMap<String, Integer>> prices, ArrayList<String> list, int tradeoff, int samestore) {
+	public BestFromList(HashMap<String, HashMap<String, Double>> prices, ArrayList<String> list, int tradeoff, int samestore) {
 		this.data = prices;
 		this.shoppinglist = list;
 		this.tradeoff = tradeoff;
@@ -24,11 +24,11 @@ public class BestFromList {
 		BestPrice best = new BestPrice();
 		
 		for (String food : this.shoppinglist) {
-			HashMap<String, Integer> foodlist = this.data.get(food);
+			HashMap<String, Double> foodlist = this.data.get(food);
 
-			Pair<String, Integer> min = new Pair<String, Integer>(null, Integer.MAX_VALUE);
+			Pair<String, Double> min = new Pair<String, Double>(null, Double.MAX_VALUE);
 			for(String location : foodlist.keySet()) {
-				Integer price = data.get(food).get(location);
+				Double price = data.get(food).get(location);
 				if (price < min.getValue1()) {
 					min.setAt0(location);
 					min.setAt1(price);
@@ -58,7 +58,7 @@ public class BestFromList {
 		int m = nearbystores.size();
 		Set<String> stores = null;
 		
-		int[][] totalWeight = new int[n][m];
+		Double[][] totalWeight = new Double[n][m];
 		
 		// Initialize Dynamic Programming Table
 		for (int j = 0; j < m; j++) {
@@ -83,8 +83,8 @@ public class BestFromList {
 		return best;
 	}
 	
-	public int getTracebackMin(int[][] table, int i, int m){
-		int minVal = Integer.MAX_VALUE;
+	public int getTracebackMin(Double[][] table, int i, int m){
+		Double minVal = Double.MAX_VALUE;
 		int minJ = -1;
 		
 		for (int j = 0; j < m; j++) {
@@ -96,8 +96,8 @@ public class BestFromList {
 		return minJ;
 	}
 	
-	public int getDPMin(int[][] table, int i, int m, Set<String> stores, ArrayList<String> nearbystores){
-		int minVal = Integer.MAX_VALUE;
+	public Double getDPMin(Double[][] table, int i, int m, Set<String> stores, ArrayList<String> nearbystores){
+		Double minVal = Double.MAX_VALUE;
 		int minJ = -1;
 		
 		for (int j = 0; j < m; j++) {
@@ -110,8 +110,8 @@ public class BestFromList {
 		return minVal;
 	}
 	
-	public int getScore(String location, int price, Set<String> stores){
-		int prescore = this.tradeoff * price * this.nearbyStores().get(location).getDistance();
+	public Double getScore(String location, Double price, Set<String> stores){
+		Double prescore = this.tradeoff * price * this.nearbyStores().get(location).getDistance();
 		if (stores.contains(location)) {
 			return prescore * this.samestore;
 		}

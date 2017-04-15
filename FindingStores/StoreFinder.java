@@ -1,6 +1,6 @@
 package NeededFiles;
 
-import java.awt.List;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -15,30 +16,29 @@ public class StoreFinder {
 	
 	String urlBase = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
 	String dest = "&destinations=";
-	String urlTail = "&key=AIzaSyBlpXHhm4nBdqEUHRSTyDyxafrLZxf5Jck";
+	String urlTail = "&key=AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs"; //distance API key
 	
 	static int maxMinutes = 60;
-	static int radius = 61000;
+	static int radius = 40000;
 	double lat = 42.324079;
 	double lon = -72.530696;
 	
-	ArrayList<String> placeNames;
-	Map<String,ArrayList<Place>> nameToPlace;
-	Map<Place,Integer> storeByPlace;
+	List<String> placeNames = new ArrayList<String>();
+	Map<String,ArrayList<Place>> nameToPlace = new HashMap<String,ArrayList<Place>>();
 	
 	
-	ArrayList<Place> places;
+	List<Place> places = new ArrayList<Place>();
 	
-	String[] mainStores = {"Stop and Shop","Walmart","Walmart Supercenter","Costco","The Kroger Company","The Home Depot","Walgreens","Walgreens Pharmacy","Target","CVS","Best Buy",
+	String[] mainStores = {"Stop & Shop", "Super Stop & Shop", "Walmart","Walmart Supercenter","Costco","The Kroger Company","The Home Depot","Walgreens","Walgreens Pharmacy","Target","CVS","Best Buy",
 			"Safeway","Rite Aid","Kohl's","Dollar General","Family Dollar","Dollar Tree","Staples","Big Y","CVS Pharmacy"};
 	
 	GooglePlaces client;
 	
-	public static void main(String[] args) {
+public static void main(String[] args) {
 		
 		ArrayList<String> inputLines = readFile("testInput.txt");
 		for(String s : inputLines)
-			distance2(s);
+			TESTDATADISTANCE(s);
 			
 		
 		System.out.println("All finished!");
@@ -46,38 +46,45 @@ public class StoreFinder {
 	}
 	
 	public StoreFinder() {
-		client = new GooglePlaces("AIzaSyDxkr8XQc2mbW3z2seCcGaQDBuQHUQaG9s");
+		client = new GooglePlaces("AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs");
+		
 	}
 	
 	public StoreFinder(double la, double lo) {
-		client = new GooglePlaces("AIzaSyDxkr8XQc2mbW3z2seCcGaQDBuQHUQaG9s");
+		client = new GooglePlaces("AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs");
 		lat = la;
 		lon = lo;
 	}
 	
 	public void findStores() {
-		places = client.getNearbyPlaces(la, lon, radius, GooglePlaces.MAXIMUM_RESULTS)
+		//System.out.println("Finding Stores...");
+		
+		for(int in = 0 ; in < mainStores.length ; in++) {
+			List<Place> temp = client.getNearbyPlaces(lat,lon,radius,2,Param.name("name").value(mainStores[in]));
+			for(Place p : temp) {
+				System.out.println(p.getName());
+				if(Arrays.asList(mainStores).contains(p.getName()))
+					places.add(p);
+			}
+		}
+			
+		
 		for(Place p : places) {
+			System.out.println("Found " + p.getName());
 			if(Arrays.asList(mainStores).contains(p.getName())) {
 				int dist = distanceTo(p);
 				p.setDistance(dist);
-				nameToPlace.get(p.getName()).add(p);
-				
-				
-				
-				
-				/*int dist = distanceTo(p);
-				if(storeByPlace.containsKey(p)) {
-					if(dist < storeByPlace.get(p))
-						storeByPlace.put(p, dist);
-				} else {
-					storeByPlace.put(p, dist);
-				}
 				if(!placeNames.contains(p.getName()))
 					placeNames.add(p.getName());
-				nameToPlace.put(p.getName(), p);*/
+				if(!nameToPlace.containsKey(p.getName()))
+						nameToPlace.put(p.getName(), new ArrayList<Place>());
+				nameToPlace.get(p.getName()).add(p);
+				
 			}
 		}
+		
+		//System.out.println(placeNames.size());
+		//System.out.println("All finished!");
 	}
 	
 	
@@ -89,15 +96,18 @@ public class StoreFinder {
 		lon = lo;
 	}
 	
-	public ArrayList<String> getNearbyStoreNames(){
+	public void setLatLong(double la,double lo) {
+		lat = la;
+		lon = lo;
+	}
+	
+	public List<String> getNearbyStoreNames(){
 		return placeNames;
 	}
 	
-	public Map<String,Place> getNamesToPlacesMap(){
+	public Map<String,ArrayList<Place>> getNamesToPlacesMap(){
 		return nameToPlace;
 	}
-	
-	public Map<Place,Integer>
 	
 	private static ArrayList<String> readFile(String filename)
 	{
@@ -121,7 +131,7 @@ public class StoreFinder {
 	  }
 	}
 	
-	public static int distance2(String t) 
+	public static int TESTDATADISTANCE(String t) 
 	{
 			String s = t;
 			
@@ -148,10 +158,11 @@ public class StoreFinder {
 			String s;
 			try {
 				s = getHTML(urlBase+lat+","+lon+dest+p.getLatitude()+","+p.getLongitude()+urlTail);
-			} catch(Exception e) { return Integer.MAX_VALUE;}
+			} catch(Exception e) { return 60;}
 			
 			String[] json = s.split(" ");
-			//System.out.println(s);
+			
+			System.out.println(s);
 			int num = 0;
 			for(String a : json) {
 				
@@ -161,11 +172,17 @@ public class StoreFinder {
 				if(a.length() > 0 && a.substring(0,1).equals("\"") &&
 						!a.contains("-") && a.length() < 4 && Integer.parseInt(a.substring(1)) < maxMinutes )
 						//System.out.println("parsed dist = "+ a.substring(1));
-					return Integer.parseInt(a.substring(1));
+					try {
+						//System.out.println("found distance: " + Integer.parseInt(a.substring(1)));
+						return Integer.parseInt(a.substring(1));
+					} catch(Exception e) {
+						//System.out.println("bad distance parsed, returned 60");
+						return 60;
+					}
 				num = 0;
 				
 			}
-			return Integer.MAX_VALUE;
+			return 60;
 	}
 	
 	 public String getHTML(String urlToRead) throws Exception {

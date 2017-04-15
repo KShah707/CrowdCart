@@ -921,6 +921,8 @@
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="title_activity_main">Ocr Detector Sample</string>
     <string name="title_activity_root">RootActivity</string>
+    <string name="title_activity_route_plan">RoutePlanActivity</string>
+    <string name="title_activity_shopping_list">ShoppingListActivity</string>
     <string name="use_flash">Use Flash</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>

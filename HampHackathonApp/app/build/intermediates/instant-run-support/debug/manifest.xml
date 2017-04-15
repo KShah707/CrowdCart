@@ -28,11 +28,13 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="ocr" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs" />
 
         <activity
             android:name="com.google.android.gms.samples.vision.ocrreader.OcrCaptureActivity"
-            android:label="Scan a Receipt" >
-        </activity>
+            android:label="Scan a Receipt" />
         <activity
             android:name="com.google.android.gms.samples.vision.ocrreader.RootActivity"
             android:label="Price Checker App" >
@@ -42,6 +44,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.google.android.gms.samples.vision.ocrreader.ShoppingListActivity"
+            android:label="@string/title_activity_shopping_list" />
+        <activity
+            android:name="com.google.android.gms.samples.vision.ocrreader.RoutePlanActivity"
+            android:label="@string/title_activity_route_plan" />
         <activity
             android:name="com.google.android.gms.common.api.GoogleApiActivity"
             android:exported="false"

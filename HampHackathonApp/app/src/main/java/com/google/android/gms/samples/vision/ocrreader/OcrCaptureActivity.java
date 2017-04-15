@@ -54,6 +54,7 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -363,7 +364,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         if (graphic != null) {
             text = graphic.getTextBlock();
             if (text != null && text.getValue() != null) {
-                wordList.addAll(Arrays.asList(graphic.getTextBlock().getValue().split("\\n")));
+               List<String> foundWords = Arrays.asList(graphic.getTextBlock().getValue().split("\\n"));
+                wordList.addAll(foundWords);
                 graphic.ChangeColorTapped();
             }
         }

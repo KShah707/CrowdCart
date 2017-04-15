@@ -5,32 +5,32 @@
     density="xxxhdpi"
     format="8"
     plugin-version="2.2.3"
-    timestamp="105735705553382"
-    token="8411804936407441420"
+    timestamp="150819862231308"
+    token="-4880774768404495970"
     verifier="FULL_BUILD_REQUESTED" >
 
     <task
         name="javac"
-        duration="823" />
+        duration="948" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="45" />
+        duration="44" />
     <task
         name="verifier"
-        duration="9" />
+        duration="3" />
 
     <artifact
-        location="C:\Users\K Shah\Documents\ocr-reader-complete\app\build\outputs\apk\app-debug.apk"
+        location="C:\Users\K Shah\Documents\GitHub\HampHackathon\HampHackathonApp\app\build\outputs\apk\app-debug.apk"
         type="MAIN" />
 
     <build
-        timestamp="105735705553382"
+        timestamp="150819862231308"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
-            location="C:\Users\K Shah\Documents\ocr-reader-complete\app\build\outputs\apk\app-debug.apk"
+            location="C:\Users\K Shah\Documents\GitHub\HampHackathon\HampHackathonApp\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
     </build>
 

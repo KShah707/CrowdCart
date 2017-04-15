@@ -41,8 +41,8 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 
     private static final int TEXT_COLOR = Color.WHITE;
 
-    private static Paint sRectPaint;
-    private static Paint sTextPaint;
+    private Paint sRectPaint;
+    private Paint sTextPaint;
     private final TextBlock mText;
     private ArrayList<String> words;
 
@@ -125,7 +125,6 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         for(Text currentText : textComponents) {
             float left = translateX(currentText.getBoundingBox().left);
             float bottom = translateY(currentText.getBoundingBox().bottom);
-            String foundwords = currentText.getValue();
             canvas.drawText(currentText.getValue(), left, bottom, sTextPaint);
 
             //words.add(foundwords);

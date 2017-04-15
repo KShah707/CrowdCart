@@ -491,7 +491,7 @@ public class Place {
      * @return this
      */
     public Place downloadIcon() {
-        icon = client.download(iconUrl);
+        //icon = client.download(iconUrl);
         return this;
     }
 

@@ -1,6 +1,5 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.KnowledgeEngine;
 
 import java.util.ArrayList;
@@ -20,6 +20,11 @@ public class RootActivity extends AppCompatActivity {
     private CustomAdapter customAdapter;
     private ArrayList<String> wordList;
     private KnowledgeEngine knowledgeEngine;
+
+    final String STORE_ID = "shoprite374";
+    final double PRICE = 10.50;
+
+    PriceData priceData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +39,18 @@ public class RootActivity extends AppCompatActivity {
         camera_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Click action
                 startActivityForResult(ocrIntent, 0);
             }
         });
 
-        FloatingActionButton additem_fab = (FloatingActionButton) findViewById(R.id.additem_fab);
-        additem_fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton gotoshop_fab = (FloatingActionButton) findViewById(R.id.gotoshop_fab);
+        final Intent shopIntent = new Intent(this, ShoppingListActivity.class);
+        gotoshop_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Click action
+                priceData.getDatabase();
+                shopIntent.putExtra("database", priceData.getDatabase());
+                startActivity(shopIntent);
             }
         });
 
@@ -54,6 +61,7 @@ public class RootActivity extends AppCompatActivity {
         itemList.setAdapter(customAdapter);
 
         knowledgeEngine = new KnowledgeEngine(getApplicationContext());
+        priceData = new PriceData();
     }
 
     @Override
@@ -66,9 +74,13 @@ public class RootActivity extends AppCompatActivity {
 
                 for (String item : rawItemList)
                 {
-                    wordList.add(knowledgeEngine.closest(item));
+                    String engined = knowledgeEngine.closest(item);
+                    wordList.add(engined);
+                    priceData.addEntry(engined, STORE_ID, PRICE);
                 }
                 customAdapter.notifyDataSetChanged();
+
+
 
                 if (wordList.size() > 0)
                     Log.w("intent result", wordList.get(wordList.size() - 1));

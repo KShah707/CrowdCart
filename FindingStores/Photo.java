@@ -29,10 +29,7 @@ public class Photo {
      * @param extraParams to append to request url
      * @return this
      */
-    public Photo download(int maxWidth, int maxHeight, Param... extraParams) {
-        image = place.getClient().downloadPhoto(this, maxWidth, maxHeight, extraParams);
-        return this;
-    }
+    
 
     /**
      * Downloads the photo and caches it within the photo.

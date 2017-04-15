@@ -1,7 +1,7 @@
-#Sat Apr 15 03:37:20 EDT 2017
-base.0=C\:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_60a52a1a14db18eb91786d0130bfe250a044d64b
+#Sat Apr 15 16:08:47 EDT 2017
+base.0=C\:\\Users\\K Shah\\Documents\\GitHub\\HampHackathon\\HampHackathonApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_c98981d234157acb1428ac86a7f03fc74b2c09fe
 renamed.1=classes2.dex
 renamed.0=classes.dex
-file.1=C\:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_27bf3850133ca61aaf1b2a4d5edc53a3b46282e6\\classes.dex
-base.1=C\:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_27bf3850133ca61aaf1b2a4d5edc53a3b46282e6
-file.0=C\:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_60a52a1a14db18eb91786d0130bfe250a044d64b\\classes.dex
+file.1=C\:\\Users\\K Shah\\Documents\\GitHub\\HampHackathon\\HampHackathonApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_8b8ac2ab171c65ee8f3dd495712ab7e0506d4e9c\\classes.dex
+base.1=C\:\\Users\\K Shah\\Documents\\GitHub\\HampHackathon\\HampHackathonApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_8b8ac2ab171c65ee8f3dd495712ab7e0506d4e9c
+file.0=C\:\\Users\\K Shah\\Documents\\GitHub\\HampHackathon\\HampHackathonApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_c98981d234157acb1428ac86a7f03fc74b2c09fe\\classes.dex

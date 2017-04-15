@@ -16,7 +16,7 @@ public interface GooglePlacesInterface extends Types, Statuses {
     /**
      * The maximum amount of results that can be on one single page.
      */
-    int MAXIMUM_PAGE_RESULTS = 600;
+    int MAXIMUM_PAGE_RESULTS = 5;
 
     /**
      * The default amount of results that will be returned in a single request.
@@ -31,7 +31,7 @@ public interface GooglePlacesInterface extends Types, Statuses {
     /**
      * The maximum radar results that can be returned.
      */
-    int MAXIMUM_RADAR_RESULTS = 200;
+    int MAXIMUM_RADAR_RESULTS = 600;
 
     /**
      * The maximum search radius for places.

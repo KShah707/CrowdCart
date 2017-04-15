@@ -13,4 +13,6 @@
     <string name="ocr_failure">No text captured</string>
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="title_activity_root">RootActivity</string>
+    <string name="title_activity_shopping_list">ShoppingListActivity</string>
+    <string name="title_activity_route_plan">RoutePlanActivity</string>
 </resources>

@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
+
 import org.javatuples.*;
 
 public class BestFromList {
@@ -50,18 +52,19 @@ public class BestFromList {
 		
 		int n = this.shoppinglist.size();
 		int m = nearbystores.size();
+		Set<String> stores = null;
 		
 		int[][] totalWeight = new int[n][m];
 		
 		// Initialize Dynamic Programming Table
 		for (int j = 0; j < m; j++) {
-			totalWeight[0][j] = this.getScore(this.knownprices.get(this.shoppinglist.get(0)).get(j));
+			totalWeight[0][j] = this.getScore(this.knownprices.get(this.shoppinglist.get(0)).get(j), stores);
 		}
 		
 		// Recurrence
 		for (int i = 1; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				totalWeight[i][j] = this.getScore(this.knownprices.get(this.shoppinglist.get(i)).get(j)) + this.getDPMin(totalWeight, i-1, m);
+				totalWeight[i][j] = this.getScore(this.knownprices.get(this.shoppinglist.get(i)).get(j), stores) + this.getDPMin(totalWeight, i-1, m, stores);
 			}
 		}
 		
@@ -87,19 +90,29 @@ public class BestFromList {
 		return minJ;
 	}
 	
-	public int getDPMin(int[][] table, int i, int m){
+	public int getDPMin(int[][] table, int i, int m, Set<String> stores){
 		int minVal = Integer.MAX_VALUE;
+		int minJ = -1;
 		
 		for (int j = 0; j < m; j++) {
 			if (table[i][j] < minVal) {
 				minVal = table[i][j];
+				minJ = j;
 			}
 		}
+		stores.add(this.nearbyStores().get(minJ));
 		return minVal;
 	}
 	
-	public int getScore(Pair<String, Integer> entry){
-		return this.tradeoff * this.samestore * entry.getValue1() * this.getDistance(entry.getValue0());
+	public int getScore(Pair<String, Integer> entry, Set<String> stores){
+		int prescore = this.tradeoff * entry.getValue1() * this.getDistance(entry.getValue0());
+		if (stores.contains(entry.getValue0())) {
+			return prescore * this.samestore;
+		}
+		else {
+			return prescore;
+		}
+		
 	}
 	
 	public int getDistance(String location){

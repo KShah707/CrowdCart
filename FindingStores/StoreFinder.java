@@ -25,6 +25,7 @@ public class StoreFinder {
 	
 	List<String> placeNames = new ArrayList<String>();
 	Map<String,ArrayList<Place>> nameToPlace = new HashMap<String,ArrayList<Place>>();
+	Map<String,Place> nameToID = new HashMap<String,Place>();
 	
 	
 	List<Place> places = new ArrayList<Place>();
@@ -62,15 +63,14 @@ public static void main(String[] args) {
 		for(int in = 0 ; in < mainStores.length ; in++) {
 			List<Place> temp = client.getNearbyPlaces(lat,lon,radius,2,Param.name("name").value(mainStores[in]));
 			for(Place p : temp) {
-				System.out.println(p.getName());
-				if(Arrays.asList(mainStores).contains(p.getName()))
+				if(Arrays.asList(mainStores).contains(p.getName())) {
 					places.add(p);
+				}
 			}
 		}
 			
 		
 		for(Place p : places) {
-			System.out.println("Found " + p.getName());
 			if(Arrays.asList(mainStores).contains(p.getName())) {
 				int dist = distanceTo(p);
 				p.setDistance(dist);
@@ -79,12 +79,17 @@ public static void main(String[] args) {
 				if(!nameToPlace.containsKey(p.getName()))
 						nameToPlace.put(p.getName(), new ArrayList<Place>());
 				nameToPlace.get(p.getName()).add(p);
+				nameToID.put(p.getPlaceId(),p);
 				
 			}
 		}
 		
 		//System.out.println(placeNames.size());
 		//System.out.println("All finished!");
+	}
+	
+	public Map<String,Place> getIDMap() {
+		return nameToID;
 	}
 	
 	

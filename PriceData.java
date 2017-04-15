@@ -1,39 +1,39 @@
-import java.util.Collections;
+package NeededFiles;
 import java.util.HashMap;
 
 import org.javatuples.*;
 
 public class PriceData {
-	HashMap<String, HashMap<Place, Integer>> database;
+	HashMap<String, HashMap<String, Double>> database;
 
-	public void addEntry(String food, Place location, Integer price) {
+	public void addEntry(String food, String location, Double price) {
 		if (!database.containsKey(food)) {
-			database.put(food, new HashMap<Place, Integer>(null));
+			database.put(food, new HashMap<String, Double>(null));
 		}
 		database.get(food).put(location, price);
 	}
 	
-	public void removeEntry(String food, Place location, Integer price) {
-		Pair<Place, Integer> toRemove = new Pair<Place, Integer>(location, price);
+	public void removeEntry(String food, String location, Double price) {
+		Pair<String, Double> toRemove = new Pair<String, Double>(location, price);
 		database.get(food).remove(toRemove);
 	}
 	
 	public void displayEntries(){
 		for (String food : database.keySet()) {
-			for (Place entry : database.get(food).keySet()){
-				Place location = entry;
-				Integer price = database.get(food).get(entry);
+			for (String entry : database.get(food).keySet()){
+				String location = entry;
+				Double price = database.get(food).get(entry);
 				System.out.println(food+" costs $"+price+" at "+location+".");
 			}
 				
 		}
 	}
 	
-	public int getPrice(String food, Place location){
+	public Double getPrice(String food, String location){
 		return database.get(food).get(location);
 	}
 	
-	public HashMap<String, HashMap<Place, Integer>> getDatabase() {
+	public HashMap<String, HashMap<String, Double>> getDatabase() {
 		return database;
 	}
 	

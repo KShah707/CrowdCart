@@ -1,16 +1,16 @@
-import java.util.ArrayList;
-import java.util.Collections;
+package NeededFiles;
 import java.util.HashMap;
 import org.javatuples.*;
 
 public class BestPrice {
-	HashMap<String, Pair<Place, Integer>> best = new HashMap<String, Pair<Place, Integer>>();
+	HashMap<String, Pair<String, Double>> best = new HashMap<String, Pair<String, Double>>();
 	
-	public void addTriplet(String food, Place location, Integer price) {
-		best.put(food, new Pair<Place, Integer>(location, price));
+	public void addTriplet(String food, String location, Double price) {
+		best.put(food, new Pair<String, Double>(location, price));
 	}
 	
-	public Pair<Place, Integer> getPrice(String food) {
+	public Pair<String, Double> getPrice(String food) {
 		return best.get(food);
 	}
+
 }

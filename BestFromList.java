@@ -1,18 +1,19 @@
+package NeededFiles;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.javatuples.*;
 
 public class BestFromList {
 
-	public HashMap<String, HashMap<Place, Integer>> data;
+	public HashMap<String, HashMap<String, Double>> data;
 	public ArrayList<String> shoppinglist;
 	int tradeoff;
 	int samestore;
 	
-	public BestFromList(HashMap<String, HashMap<Place, Integer>> prices, ArrayList<String> list, int tradeoff, int samestore) {
+	public BestFromList(HashMap<String, HashMap<String, Double>> prices, ArrayList<String> list, int tradeoff, int samestore) {
 		this.data = prices;
 		this.shoppinglist = list;
 		this.tradeoff = tradeoff;
@@ -23,11 +24,11 @@ public class BestFromList {
 		BestPrice best = new BestPrice();
 		
 		for (String food : this.shoppinglist) {
-			HashMap<Place, Integer> foodlist = this.data.get(food);
-			
-			Pair<Place, Integer> min = new Pair<Place, Integer>(null, Integer.MAX_VALUE);
-			for(Place location : foodlist.keySet()) {
-				Integer price = data.get(food).get(location);
+			HashMap<String, Double> foodlist = this.data.get(food);
+
+			Pair<String, Double> min = new Pair<String, Double>(null, Double.MAX_VALUE);
+			for(String location : foodlist.keySet()) {
+				Double price = data.get(food).get(location);
 				if (price < min.getValue1()) {
 					min.setAt0(location);
 					min.setAt1(price);
@@ -41,31 +42,35 @@ public class BestFromList {
 	
 	public BestRoute bestRoute(){
 		
-		ArrayList<Place> nearbystores = this.nearbyStores();
+		ArrayList<String> nearbystores = new ArrayList<String>(null);
+		
+		for (String location : this.nearbyStores().keySet()) {
+			nearbystores.add(location);
+		}
 		BestRoute best = new BestRoute();
 		
-		for (Place location : nearbystores) {
+		for (String location : nearbystores) {
 			best.addStore(location);
 		}
 		
 		
 		int n = this.shoppinglist.size();
 		int m = nearbystores.size();
-		Set<Place> stores = null;
+		Set<String> stores = null;
 		
-		int[][] totalWeight = new int[n][m];
+		Double[][] totalWeight = new Double[n][m];
 		
 		// Initialize Dynamic Programming Table
 		for (int j = 0; j < m; j++) {
-			Place location = nearbystores.get(j);
+			String location = nearbystores.get(j);
 			totalWeight[0][j] = this.getScore(location, this.data.get(this.shoppinglist.get(0)).get(j), stores);
 		}
 		
 		// Recurrence
 		for (int i = 1; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-				Place location = nearbystores.get(j);
-				totalWeight[i][j] = this.getScore(location, this.data.get(this.shoppinglist.get(i)).get(location), stores) + this.getDPMin(totalWeight, i-1, m, stores);
+				String location = nearbystores.get(j);
+				totalWeight[i][j] = this.getScore(location, this.data.get(this.shoppinglist.get(i)).get(location), stores) + this.getDPMin(totalWeight, i-1, m, stores, nearbystores);
 			}
 		}
 		
@@ -78,8 +83,8 @@ public class BestFromList {
 		return best;
 	}
 	
-	public int getTracebackMin(int[][] table, int i, int m){
-		int minVal = Integer.MAX_VALUE;
+	public int getTracebackMin(Double[][] table, int i, int m){
+		Double minVal = Double.MAX_VALUE;
 		int minJ = -1;
 		
 		for (int j = 0; j < m; j++) {
@@ -91,8 +96,8 @@ public class BestFromList {
 		return minJ;
 	}
 	
-	public int getDPMin(int[][] table, int i, int m, Set<Place> stores){
-		int minVal = Integer.MAX_VALUE;
+	public Double getDPMin(Double[][] table, int i, int m, Set<String> stores, ArrayList<String> nearbystores){
+		Double minVal = Double.MAX_VALUE;
 		int minJ = -1;
 		
 		for (int j = 0; j < m; j++) {
@@ -101,12 +106,12 @@ public class BestFromList {
 				minJ = j;
 			}
 		}
-		stores.add(this.nearbyStores().get(minJ));
+		stores.add(nearbystores.get(minJ));
 		return minVal;
 	}
 	
-	public int getScore(Place location, int price, Set<Place> stores){
-		int prescore = this.tradeoff * price * location.getDistance();
+	public Double getScore(String location, Double price, Set<String> stores){
+		Double prescore = this.tradeoff * price * this.nearbyStores().get(location).getDistance();
 		if (stores.contains(location)) {
 			return prescore * this.samestore;
 		}
@@ -116,9 +121,11 @@ public class BestFromList {
 		
 	}
 	
-	public ArrayList<Place> nearbyStores(){
-		return new ArrayList<Place>(null);
-		// Need an ArrayList of all places
+	public Map<String, Place> nearbyStores(){
+		StoreFinder finder = new StoreFinder();
+		finder.findStores();
+		return finder.getIDMap();
+		// Need an ArrayList of all Strings
 	}
 }
 

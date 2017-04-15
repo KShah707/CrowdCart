@@ -1,8 +1,5 @@
+package NeededFiles;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-
-import org.javatuples.*;
 
 public class ShoppingList {
 	ArrayList<String> list;
@@ -13,6 +10,10 @@ public class ShoppingList {
 	
 	public void removeItem(String food) {
 		list.remove(food);
+	}
+	
+	public void setList(ArrayList<String> list) {
+		this.list = list;
 	}
 	
 	public String getItem(int index) {

@@ -1,7 +1,12 @@
 package NeededFiles;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +30,7 @@ public class GooglePlaces implements GooglePlacesInterface {
     public static String API_URL_FORMAT_STRING = "%s%s/json?%s";
 
     private String apiKey;
-    private RequestHandler requestHandler;
+    //private RequestHandler requestHandler;
     private boolean debugModeEnabled;
 
     /**
@@ -36,7 +41,7 @@ public class GooglePlaces implements GooglePlacesInterface {
      */
     public GooglePlaces(String apiKey, RequestHandler requestHandler) {
         this.apiKey = apiKey;
-        this.requestHandler = requestHandler;
+        //this.requestHandler = requestHandler;
     }
 
     /**
@@ -45,7 +50,8 @@ public class GooglePlaces implements GooglePlacesInterface {
      * @param apiKey that has been registered on the Google Developer Console
      */
     public GooglePlaces(String apiKey) {
-        this(apiKey, new DefaultRequestHandler());
+        //this(apiKey, new DefaultRequestHandler());
+    	this.apiKey = apiKey;
     }
 
     /**
@@ -56,7 +62,7 @@ public class GooglePlaces implements GooglePlacesInterface {
      * @param characterEncoding to parse data with
      */
     public GooglePlaces(String apiKey, String characterEncoding) {
-        this(apiKey, new DefaultRequestHandler(characterEncoding));
+        //this(apiKey, new DefaultRequestHandler(characterEncoding));
     }
 
     private static String addExtraParams(String base, Param... extraParams) {
@@ -86,6 +92,8 @@ public class GooglePlaces implements GooglePlacesInterface {
      * @param limit  the maximum amount of places to return
      * @return Next page token
      */
+    
+    
     public static String parse(GooglePlaces client, List<Place> places, String str, int limit) {
         // parse json
         JSONObject json = new JSONObject(str);
@@ -205,12 +213,12 @@ public class GooglePlaces implements GooglePlacesInterface {
 
     @Override
     public RequestHandler getRequestHandler() {
-        return requestHandler;
+        return null;//requestHandler;
     }
 
     @Override
     public void setRequestHandler(RequestHandler requestHandler) {
-        this.requestHandler = requestHandler;
+        //this.requestHandler = requestHandler;
     }
 
     @Override
@@ -218,9 +226,11 @@ public class GooglePlaces implements GooglePlacesInterface {
         try {
             String uri = buildUrl(METHOD_NEARBY_SEARCH, String.format(Locale.ENGLISH, "key=%s&location=%s,%s&radius=%s",
                     apiKey, String.valueOf(lat), String.valueOf(lng), String.valueOf(radius)), extraParams);
+            System.out.println("uri ="+uri);
             return getPlaces(uri, METHOD_NEARBY_SEARCH, limit);
         } catch (Exception e) {
             //throw new GooglePlacesException(e);
+        	System.out.println("uri not found");
         	return new ArrayList<Place>();
         }
     }
@@ -277,121 +287,28 @@ public class GooglePlaces implements GooglePlacesInterface {
         return getPlacesByQuery(query, DEFAULT_RESULTS, extraParams);
     }
 
-    @Override
-    public List<Place> getPlacesByRadar(double lat, double lng, double radius, int limit, Param... extraParams) {
-        try {
-            String uri = buildUrl(METHOD_RADAR_SEARCH, String.format(Locale.ENGLISH, "key=%s&location=%f,%f&radius=%f",
-                    apiKey, lat, lng, radius), extraParams);
-            return getRadarPlaces(uri, METHOD_RADAR_SEARCH, limit);
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
+    
 
     @Override
     public List<Place> getPlacesByRadar(double lat, double lng, double radius, Param... extraParams) {
         return getPlacesByRadar(lat, lng, radius, MAXIMUM_RESULTS, extraParams);
     }
 
-    @Override
-    public Place getPlaceById(String placeId, Param... extraParams) {
-        try {
-            String uri = buildUrl(METHOD_DETAILS, String.format("key=%s&placeid=%s", apiKey, placeId), extraParams);
-            return Place.parseDetails(this, requestHandler.get(uri));
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
+  
 
-    @Override
-    public Place addPlace(PlaceBuilder builder, boolean returnPlace, Param... extraParams) {
-        try {
-            String uri = buildUrl(METHOD_ADD, String.format("key=%s", apiKey));
-            JSONObject input = builder.toJson();
-            HttpPost post = new HttpPost(uri);
-            post.setEntity(new StringEntity(input.toString()));
-            JSONObject response = new JSONObject(requestHandler.post(post));
-            String status = response.getString(STRING_STATUS);
-            checkStatus(status, response.optString(STRING_ERROR_MESSAGE));
-            return returnPlace ? getPlaceById(response.getString(STRING_PLACE_ID)) : null;
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
-    
-
-    @Override
-    public void deletePlaceById(String placeId, Param... extraParams) {
-        try {
-            String uri = buildUrl(METHOD_DELETE, String.format("key=%s", apiKey), extraParams);
-            JSONObject input = new JSONObject().put(STRING_PLACE_ID, placeId);
-            HttpPost post = new HttpPost(uri);
-            post.setEntity(new StringEntity(input.toString()));
-            JSONObject response = new JSONObject(requestHandler.post(post));
-            String status = response.getString(STRING_STATUS);
-            checkStatus(status, response.optString(STRING_ERROR_MESSAGE));
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
+   
+   
 
     @Override
     public void deletePlace(Place place, Param... extraParams) {
         deletePlaceById(place.getPlaceId(), extraParams);
     }
 
-    protected InputStream download(String uri) {
-        try {
-            InputStream in = requestHandler.getInputStream(uri);
-            if (in == null)
-                throw new GooglePlacesException("Could not attain input stream at " + uri);
-            debug("Successfully attained InputStream at " + uri);
-            return in;
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
+    
 
-    protected InputStream downloadPhoto(Photo photo, int maxWidth, int maxHeight, Param... extraParams) {
-        try {
-            String uri = String.format("%sphoto?photoreference=%s&key=%s", API_URL, photo.getReference(),
-                    apiKey);
 
-            List<Param> params = new ArrayList<>(Arrays.asList(extraParams));
-            if (maxHeight != -1) params.add(Param.name("maxheight").value(maxHeight));
-            if (maxWidth != -1) params.add(Param.name("maxwidth").value(maxWidth));
-            extraParams = params.toArray(new Param[params.size()]);
-            uri = addExtraParams(uri, extraParams);
+  
 
-            return download(uri);
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
-
-    private List<Prediction> getPredictions(String input, String method, Param... extraParams) {
-        try {
-            String uri = buildUrl(method, String.format("input=%s&key=%s", input, apiKey),
-                    extraParams);
-            String response = requestHandler.get(uri);
-            return Prediction.parse(this, response);
-        } catch (Exception e) {
-            throw new GooglePlacesException(e);
-        }
-    }
-
-    @Override
-    public List<Prediction> getPlacePredictions(String input, int offset, int lat, int lng, int radius,
-                                                Param... extraParams) {
-        List<Param> params = new ArrayList<>();
-        if (offset != -1)
-            params.add(Param.name("offset").value(offset));
-        if (lat != -1 && lng != -1)
-            params.add(Param.name("location").value(lat + "," + lng));
-        params.addAll(new ArrayList<>(Arrays.asList(extraParams)));
-
-        return getPredictions(input, METHOD_AUTOCOMPLETE, params.toArray(new Param[params.size()]));
-    }
 
     @Override
     public List<Prediction> getPlacePredictions(String input, int offset, Param... extraParams) {
@@ -403,18 +320,7 @@ public class GooglePlaces implements GooglePlacesInterface {
         return getPlacePredictions(input, -1, extraParams);
     }
 
-    @Override
-    public List<Prediction> getQueryPredictions(String input, int offset, int lat, int lng, int radius,
-                                                Param... extraParams) {
-        List<Param> params = new ArrayList<>();
-        if (offset != -1)
-            params.add(Param.name("offset").value(offset));
-        if (lat == -1 && lng == -1)
-            params.add(Param.name("location").value(lat + "," + lng));
-        params.addAll(new ArrayList<>(Arrays.asList(extraParams)));
-
-        return getPredictions(input, METHOD_QUERY_AUTOCOMPLETE, params.toArray(new Param[params.size()]));
-    }
+    
 
     @Override
     public List<Prediction> getQueryPredictions(String input, int offset, Param... extraParams) {
@@ -425,6 +331,28 @@ public class GooglePlaces implements GooglePlacesInterface {
     public List<Prediction> getQueryPredictions(String input, Param... extraParams) {
         return getQueryPredictions(input, -1, extraParams);
     }
+    
+    private String readString(HttpResponse response) throws IOException {
+        String str = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
+        if (str == null || str.trim().length() == 0) {
+            return null;
+        }
+        return str.trim();
+    }
+    
+    public String getRaw(String uri) throws IOException {
+        HttpGet get = new HttpGet(uri);
+        try {
+        	HttpClient client = HttpClientBuilder.create().build();
+            return readString(client.execute(get));
+        } catch (Exception e) {
+            throw new IOException(e);
+        } finally {
+            get.releaseConnection();
+        }
+    }
+    
+    
 
     private List<Place> getPlaces(String uri, String method, int limit) throws IOException {
         limit = Math.min(limit, MAXIMUM_RESULTS); // max of 60 results possible
@@ -434,9 +362,13 @@ public class GooglePlaces implements GooglePlacesInterface {
         // new request for each page
         for (int i = 0; i < pages; i++) {
             debug("Page: " + (i + 1));
-            String raw = requestHandler.get(uri);
-            debug(raw);
+            //String raw = requestHandler.get(uri);
+            //debug(raw);
+            String raw = this.getRaw(uri);
+            System.out.println("raw = "+raw);
+            
             String nextPage = parse(this, places, raw, limit);
+            System.out.println("nextPage = "+nextPage);
             // reduce the limit, update the uri and wait for token, but only if there are more pages to read
             if (nextPage != null && i < pages - 1) {
                 limit -= MAXIMUM_PAGE_RESULTS;
@@ -451,16 +383,6 @@ public class GooglePlaces implements GooglePlacesInterface {
         return places;
     }
 
-    private List<Place> getRadarPlaces(String uri, String method, int limit) throws IOException {
-      limit = Math.min(limit, MAXIMUM_RADAR_RESULTS); // max of 200 results possible
-
-      List<Place> places = new ArrayList<>();
-      String raw = requestHandler.get(uri);
-      debug(raw);
-      parseRadar(this, places, raw, limit);
-
-      return places;
-    }
 
     private void sleep(long millis) {
         try {
@@ -469,5 +391,43 @@ public class GooglePlaces implements GooglePlacesInterface {
             e.printStackTrace();
         }
     }
+
+	@Override
+	public List<Place> getPlacesByRadar(double lat, double lng, double radius, int limit, Param... extraParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Place getPlaceById(String placeId, Param... extraParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Place addPlace(PlaceBuilder builder, boolean returnPlace, Param... extraParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deletePlaceById(String placeId, Param... extraParams) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Prediction> getPlacePredictions(String input, int offset, int lat, int lng, int radius,
+			Param... extraParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Prediction> getQueryPredictions(String input, int offset, int lat, int lng, int radius,
+			Param... extraParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

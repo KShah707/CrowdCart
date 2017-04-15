@@ -16,7 +16,8 @@ public class StoreFinder {
 	
 	String urlBase = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=";
 	String dest = "&destinations=";
-	String urlTail = "&key=AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs"; //distance API key
+	String urlTail = "&key=AIzaSyDRBkxPBhXqiFt1wyU-zWIoTXgGz7OVHTg"; //distance API key
+	String googlePlacesAPIKey = "AIzaSyBj-h8NiSy6pyepYlyITwRh9JrDxmh6Nas";
 	
 	static int maxMinutes = 60;
 	static int radius = 40000;
@@ -47,31 +48,35 @@ public static void main(String[] args) {
 	}
 	
 	public StoreFinder() {
-		client = new GooglePlaces("AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs");
+		client = new GooglePlaces(googlePlacesAPIKey);
 		
 	}
 	
 	public StoreFinder(double la, double lo) {
-		client = new GooglePlaces("AIzaSyCAHrxbFgEGc32RymgFH32IuXIer6VwSOs");
+		client = new GooglePlaces(googlePlacesAPIKey);
 		lat = la;
 		lon = lo;
-	}
+	} 
 	
 	public void findStores() {
-		//System.out.println("Finding Stores...");
+		System.out.println("Finding Stores...");
 		
 		for(int in = 0 ; in < mainStores.length ; in++) {
 			List<Place> temp = client.getNearbyPlaces(lat,lon,radius,2,Param.name("name").value(mainStores[in]));
+			System.out.println("temp size = " + temp.size());
+				
 			for(Place p : temp) {
+				System.out.println(p.getName());
 				if(Arrays.asList(mainStores).contains(p.getName())) {
 					places.add(p);
 				}
 			}
 		}
 			
-		
+			System.out.println("Putting places into maps...");
+		System.out.println("NUm places = " + places.size());
 		for(Place p : places) {
-			if(Arrays.asList(mainStores).contains(p.getName())) {
+			System.out.println("putting place "+p.getName());
 				int dist = distanceTo(p);
 				p.setDistance(dist);
 				if(!placeNames.contains(p.getName()))
@@ -81,7 +86,7 @@ public static void main(String[] args) {
 				nameToPlace.get(p.getName()).add(p);
 				nameToID.put(p.getPlaceId(),p);
 				
-			}
+			
 		}
 		
 		//System.out.println(placeNames.size());

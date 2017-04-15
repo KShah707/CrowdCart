@@ -18,4 +18,8 @@ public class ShoppingList {
 	public String getItem(int index) {
 		return list.get(index);
 	}
+	
+	public ArrayList<String> getList(){
+		return list;
+	}
 }

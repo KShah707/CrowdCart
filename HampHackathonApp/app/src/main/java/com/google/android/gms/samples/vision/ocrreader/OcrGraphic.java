@@ -82,6 +82,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     }
 
     public void ChangeColorTapped() { sRectPaint.setColor(Color.YELLOW); sTextPaint.setColor(Color.YELLOW); }
+    public void ResetColorWhite() { sRectPaint.setColor(Color.WHITE); sTextPaint.setColor(Color.WHITE); }
 
     /**
      * Checks whether a point is within the bounding box of this graphic.

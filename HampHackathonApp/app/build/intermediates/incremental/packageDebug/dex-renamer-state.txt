@@ -1,4 +1,4 @@
-#Sat Apr 15 00:18:03 EDT 2017
+#Sat Apr 15 03:37:20 EDT 2017
 base.0=C\:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_60a52a1a14db18eb91786d0130bfe250a044d64b
 renamed.1=classes2.dex
 renamed.0=classes.dex

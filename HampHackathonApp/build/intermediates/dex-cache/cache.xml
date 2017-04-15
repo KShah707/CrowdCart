@@ -88,7 +88,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="4f657e2ff9f65feae5e8fb0f2806b2e965e162b5">
+        sha1="2e19bc85e61393664e32b56e23af7f61fcd9835d">
         <dex dex="C:\Users\K Shah\Documents\ocr-reader-complete\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_27bf3850133ca61aaf1b2a4d5edc53a3b46282e6\classes.dex" />
     </item>
     <item
@@ -124,7 +124,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="44657720e8a2c8edac3f503ff94a1585b011e58e">
+        sha1="799e7c85d704cf8f32b31cc067edb5c5f17652b9">
         <dex dex="C:\Users\K Shah\Documents\ocr-reader-complete\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_60a52a1a14db18eb91786d0130bfe250a044d64b\classes.dex" />
     </item>
     <item

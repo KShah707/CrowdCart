@@ -196,6 +196,10 @@
         "source": "C:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\exploded-aar\\com.android.support\\design\\24.2.0\\res\\layout\\design_layout_snackbar_include.xml"
     },
     {
+        "merged": "C:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\res\\merged\\debug\\layout\\listrow.xml",
+        "source": "C:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\src\\main\\res\\layout\\listrow.xml"
+    },
+    {
         "merged": "C:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_text_input_password_icon.xml",
         "source": "C:\\Users\\K Shah\\Documents\\ocr-reader-complete\\app\\build\\intermediates\\exploded-aar\\com.android.support\\design\\24.2.0\\res\\layout\\design_text_input_password_icon.xml"
     },

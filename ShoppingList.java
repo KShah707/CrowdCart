@@ -14,4 +14,8 @@ public class ShoppingList {
 	public void removeItem(String food) {
 		list.remove(food);
 	}
+	
+	public String getItem(int index) {
+		return list.get(index);
+	}
 }
